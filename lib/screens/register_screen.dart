@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/auth_provider.dart'; // Import AuthProvider
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  String _selectedGender = 'Nam'; // Mặc định giới tính là Nam
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +55,38 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 obscureText: true,
               ),
+              SizedBox(height: 10),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: "Phone",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 10),
+              // Dropdown cho giới tính
+              DropdownButtonFormField<String>(
+                value: _selectedGender,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'Nam',
+                    child: Text('Nam'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'Nữ',
+                    child: Text('Nữ'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGender = value!;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Gender',
+                  border: OutlineInputBorder(),
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
@@ -57,6 +96,8 @@ class RegisterScreen extends StatelessWidget {
                       _nameController.text,
                       _emailController.text,
                       _passwordController.text,
+                      _phoneController.text,
+                      _selectedGender, // Sử dụng giới tính được chọn
                     );
                     Navigator.pushReplacementNamed(context, '/login');
                   } catch (e) {

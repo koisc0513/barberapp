@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/auth_provider.dart'; // Import AuthProvider
+import 'package:untitled/screens/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final userName = authProvider.userName; // Lấy tên người dùng từ authProvider
+    final currentUser = authProvider.currentUser; // Lấy thông tin người dùng từ authProvider
+
+    if (currentUser == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text("Profile")),
+        body: Center(child: Text("User not logged in.")),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -28,20 +36,33 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Name: ${userName ?? 'N/A'}", // Hiển thị tên người dùng
+              "Name: ${currentUser['name'] ?? 'N/A'}", // Hiển thị tên người dùng
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Text(
-              "Email: ${authProvider.user ?? 'N/A'}", // Hiển thị email người dùng
+              "Email: ${currentUser['email'] ?? 'N/A'}", // Hiển thị email người dùng
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Phone: ${currentUser['phone'] ?? 'N/A'}", // Hiển thị số điện thoại người dùng
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Gender: ${currentUser['gender'] ?? 'N/A'}", // Hiển thị giới tính người dùng
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate to edit profile screen or other action
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                );
               },
-              child: Text("Edit Profile"),
+              child: Text('Edit Profile'),
             ),
           ],
         ),
